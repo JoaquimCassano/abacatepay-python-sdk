@@ -79,7 +79,7 @@ class BadRequestError(APIStatusError):
         self.response = response
 
     def __str__(self):
-        return "The request was unsuccessful due to a bad request. Maybe the request syntax is wrong"
+        return f"The request was unsuccessful due to a bad request. Maybe the request syntax is wrong. Message error: {self.response.json()}"
 
 class NotFoundError(APIStatusError):
     status_code: Literal[404] = 404

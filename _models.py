@@ -10,6 +10,7 @@ class Product(BaseModel):
   description: str
 
 
+
 class ICostumer:
     def __init__(self, data:dict):
         self.data = data
@@ -27,17 +28,20 @@ class IBilling:
         self.formatJson(data)
 
     def formatJson(self, data: dict):
-        self.id: str = data['id']
-        self.url: str = data['url']
-        self.amount: int = data['amount']
-        self.status: BILLING_STATUS = data['status']
-        self.devMode: bool = data['devMode']
-        self.methods: List[BILLING_METHODS] = data['methods']
-        self.products: List[dict] = data['products']
-        self.frequency: BILLING_KINDS = data['frequency']
-        self.nextBilling: Union[str, None] = data.get('nextBilling')  # Optional field
-        self.customer: Union[ICostumer, None] = data.get('customer')  # Optional field
-        self.accountId: str = data['customerId']['accountId'] if 'customerId' in data else None
-        self.storeId: str = data['customerId']['storeId'] if 'customerId' in data else None
-        self.createdAt: str = data['createdAt']
-        self.updatedAt: str = data['updatedAt']
+        billingData = data['billing']
+
+        self.id: str = billingData['publicId']
+        self.url: str = billingData['url']
+        self.amount: int = billingData['amount']
+        self.status: BILLING_STATUS = billingData['status']
+        self.devMode: bool = billingData['devMode']
+        self.methods: List[BILLING_METHODS] = billingData['methods']
+        self.products: List[dict] = billingData['products']
+        self.frequency: BILLING_KINDS = billingData['frequency']
+        self.nextBilling: Union[str, None] = billingData.get('nextBilling')  # Optional field
+        self.customer: Union[ICostumer, None] = billingData.get('customer')  # Optional field
+        self.accountId: str = billingData['customerId']['accountId'] if 'customerId' in billingData else None
+        self.storeId: str = billingData['customerId']['storeId'] if 'customerId' in billingData else None
+        self.createdAt: str = billingData['createdAt']
+        self.updatedAt: str = billingData['updatedAt']
+
