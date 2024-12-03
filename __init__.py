@@ -20,4 +20,4 @@ class AbacatePay:
 
   def listBills(self) -> list[IBilling]:
     data = self.request(f"{BASEURL}/billing/list", method="GET").json()
-    return [IBilling(data=bill) for bill in data]
+    return [IBilling(data=bill) for bill in data['billings']]

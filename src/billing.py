@@ -29,7 +29,7 @@ class Billing:
 
     try:
         if response.status_code == 200:
-            billing_data = IBilling(data=response.json())
+            billing_data = IBilling(data=response.json()['billing'])
             self.data = billing_data
         else:
             raise_for_status(response)

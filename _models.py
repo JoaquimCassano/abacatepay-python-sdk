@@ -28,7 +28,7 @@ class IBilling:
         self.formatJson(data)
 
     def formatJson(self, data: dict):
-        billingData = data['billing']
+        billingData = data
 
         self.id: str = billingData['publicId']
         self.url: str = billingData['url']
