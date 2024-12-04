@@ -18,13 +18,13 @@ class Billing:
         "methods": methods,
         "frequency": frequency,
         "customerId": customerId,
-        "customer": customer.model_dump()
+        **({"customer": customer.model_dump()} if customer is not None else {})
       },
       headers={
         "Authorization": f"Bearer {api_key}",
         "User-Agent": USERAGENT,
         "Content-Type": "application/json"
-      }
+      },
     )
 
     try:
