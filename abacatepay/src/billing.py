@@ -1,11 +1,10 @@
 import requests
 from .._constants import BASEURL, USERAGENT, BILLING_KINDS, BILLING_METHODS, BILLING_STATUS
 from .._exceptions import *
-from .._models import Product, IBilling
-from typing import Literal
+from .._models import Product, IBilling, Customer
 
 class Billing:
-  def __init__(self, products:list[Product], returnURL:str, completionUrl:str, api_key:str, methods:list[BILLING_METHODS]=['PIX'], frequency:BILLING_KINDS='ONE_TIME'):
+  def __init__(self, products:list[Product], returnURL:str, completionUrl:str, api_key:str, methods:list[BILLING_METHODS]=['PIX'], frequency:BILLING_KINDS='ONE_TIME', customerId:str|None=None, customer:Customer|None=None):
     self.products = products
     self.returnURL = returnURL
     self.completionUrl = completionUrl
@@ -17,7 +16,9 @@ class Billing:
         "returnUrl": returnURL,
         "completionUrl": completionUrl,
         "methods": methods,
-        "frequency": frequency
+        "frequency": frequency,
+        "customerId": customerId,
+        "customer": customer.model_dump()
       },
       headers={
         "Authorization": f"Bearer {api_key}",
@@ -28,7 +29,7 @@ class Billing:
 
     try:
         if response.status_code == 200:
-            billing_data = IBilling(data=response.json()['billing'])
+            billing_data = IBilling(data=response.json()['data'])
             self.data = billing_data
         else:
             raise_for_status(response)

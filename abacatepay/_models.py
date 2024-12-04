@@ -9,7 +9,11 @@ class Product(BaseModel):
   price: int
   description: str
 
-
+class Customer(BaseModel):
+    taxId: str
+    name: str
+    email: str
+    cellphone: str
 
 class ICostumer:
     def __init__(self, data:dict):
@@ -17,10 +21,11 @@ class ICostumer:
         self.formatJson(data)
 
     def formatJson(self, data:dict):
-        self.taxId: str = data['id']
-        self.name: str = data['name']
-        self.email: str = data['email']
-        self.cellphone: str = data['phone']
+        self.id = data['id']
+        self.taxId: str = data['metadata']['taxId']
+        self.name: str = data['metadata']['name']
+        self.email: str = data['metadata']['email']
+        self.cellphone: str = data['metadata']['cellphone']
 
 class IBilling:
     def __init__(self, data:dict):
@@ -39,7 +44,7 @@ class IBilling:
         self.products: List[dict] = billingData['products']
         self.frequency: BILLING_KINDS = billingData['frequency']
         self.nextBilling: Union[str, None] = billingData.get('nextBilling')  # Optional field
-        self.customer: Union[ICostumer, None] = billingData.get('customer')  # Optional field
+        self.customer: Union[ICostumer, None] = ICostumer(data=billingData.get('customer')) if 'customer' in billingData else None  # Optional field
         self.accountId: str = billingData['customerId']['accountId'] if 'customerId' in billingData else None
         self.storeId: str = billingData['customerId']['storeId'] if 'customerId' in billingData else None
         self.createdAt: str = billingData['createdAt']
