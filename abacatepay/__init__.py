@@ -21,6 +21,7 @@ from .src.billing import Billing
 from typing import Literal
 from ._models import Product, IBilling
 from ._constants import BILLING_KINDS, BILLING_METHODS, BASEURL, USERAGENT
+from ._exceptions import *
 import requests
 
 class AbacatePay:
@@ -38,5 +39,14 @@ class AbacatePay:
     return Billing(products, returnURL, completionUrl, self.api_key, methods, frequency=frequency)
 
   def listBills(self) -> list[IBilling]:
-    data = self.request(f"{BASEURL}/billing/list", method="GET").json()
-    return [IBilling(data=bill) for bill in data['billings']]
+    response = self.request(f"{BASEURL}/billing/list", method="GET")
+    try:
+        if response.status_code == 200:
+            return [IBilling(data=bill) for bill in response.json()['billings']]
+        else:
+            raise_for_status(response)
+    except requests.exceptions.Timeout:
+        raise APITimeoutError(request=response)
+    except requests.exceptions.ConnectionError:
+        raise APIConnectionError(message="Connection error.", request=response)
+
