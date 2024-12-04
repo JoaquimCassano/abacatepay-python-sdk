@@ -10,7 +10,6 @@ class Billing:
     self.returnURL = returnURL
     self.completionUrl = completionUrl
     self.methods = methods
-    print([product.model_dump() for product in products])
     response = requests.post(
       f"{BASEURL}/billing/create",
       json={
