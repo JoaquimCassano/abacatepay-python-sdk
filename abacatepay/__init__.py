@@ -1,5 +1,5 @@
 """
-The python SDK for the AbacatePay API
+The Python SDK for the AbacatePay API
 
 Basic usage:
 ```python
@@ -8,7 +8,7 @@ import abacatepay
 token = "<your api token>"
 client = AbacatePay(token)
 
-billing = x = client.create_billing(products=[Product(externalId="123", name="Teste", quantity=1, price=101, description="Teste")], returnURL="https://abacatepay.com", completionUrl="https://abacatepay.com")
+billing = client.create_billing(products=[Product(externalId="123", name="Teste", quantity=1, price=101, description="Teste")], returnURL="https://abacatepay.com", completionUrl="https://abacatepay.com")
 print(billing.data.url)
 # > https://abacatepay.com/pay/aaaaaaa
 ```
@@ -21,7 +21,7 @@ import logging
 from typing import Literal
 
 from .billing import Billing
-from ._models import Product, Billing, Customer
+from ._models import Product, BillingResponse, Customer
 from ._constants import BILLING_KINDS, BILLING_METHODS, BASEURL, USERAGENT
 from ._exceptions import *
 
@@ -80,6 +80,10 @@ class AbacatePay:
 
         try:
             if response.status_code == 200:
-                return [Billing(data=bill) for bill in response.json()["data"]]
+                return [BillingResponse(data=bill) for bill in response.json()["data"]]
             else:
                 raise_for_status(response)
+        except requests.exceptions.Timeout:
+            raise APITimeoutError(request=response)
+        except requests.exceptions.ConnectionError:
+            raise APIConnectionError(message="Connection error", request=response)

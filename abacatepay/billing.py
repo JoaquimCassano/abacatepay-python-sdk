@@ -7,7 +7,7 @@ from ._constants import (
     BILLING_STATUS,
 )
 from ._exceptions import *
-from ._models import Product, Billing, Customer
+from ._models import Product, BillingResponse, Customer
 
 
 class Billing:
@@ -47,7 +47,7 @@ class Billing:
 
         try:
             if response.status_code == 200:
-                billing_data = Billing(data=response.json()["data"])
+                billing_data = BillingResponse(data=response.json()["data"])
                 self.data = billing_data
             else:
                 raise_for_status(response)

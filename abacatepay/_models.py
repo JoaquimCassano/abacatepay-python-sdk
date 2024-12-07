@@ -18,7 +18,7 @@ class Customer(BaseModel):
     cellphone: str
 
 
-class Costumer:
+class CostumerResponse:
     def __init__(self, data: dict):
         self.data = data
         self._format_json(data)
@@ -31,7 +31,7 @@ class Costumer:
         self.cellphone: str = data["metadata"]["cellphone"]
 
 
-class Billing:
+class BillingResponse:
     def __init__(self, data: dict):
         self.data = data
         self._format_json(data)
@@ -50,8 +50,8 @@ class Billing:
         self.next_billing: Union[str, None] = billing_data.get(
             "nextBilling"
         )  # Optional field
-        self.customer: Union[Costumer, None] = (
-            Costumer(data=billing_data.get("customer"))
+        self.customer: Union[CostumerResponse, None] = (
+            CostumerResponse(data=billing_data.get("customer"))
             if "customer" in billing_data
             else None
         )  # Optional field
