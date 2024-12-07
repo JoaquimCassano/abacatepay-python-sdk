@@ -54,6 +54,6 @@ class Billing:
 
         except requests.exceptions.Timeout:
             raise APITimeoutError(request=response)
-        
+
         except requests.exceptions.ConnectionError:
             raise APIConnectionError(message="Connection error.", request=response)
