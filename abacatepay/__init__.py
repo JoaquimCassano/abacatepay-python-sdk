@@ -35,7 +35,7 @@ class AbacatePay:
     """
 
     def __init__(self, api_key: str):
-        self.api_key = api_key
+        self.__api_key = api_key
 
     def _request(
         self,
@@ -47,7 +47,7 @@ class AbacatePay:
             method,
             url,
             headers={
-                "Authorization": f"Bearer {self.api_key}",
+                "Authorization": f"Bearer {self.__api_key}",
                 "User-Agent": USERAGENT,
             },
             **kwargs,
@@ -67,7 +67,7 @@ class AbacatePay:
             products,
             returnURL,
             completionUrl,
-            self.api_key,
+            self.__api_key,
             methods,
             frequency=frequency,
             customerId=customerId,
@@ -83,8 +83,3 @@ class AbacatePay:
                 return [Billing(data=bill) for bill in response.json()["data"]]
             else:
                 raise_for_status(response)
-
-        except requests.exceptions.Timeout:
-            raise APITimeoutError(request=response)
-        except requests.exceptions.ConnectionError:
-            raise APIConnectionError(message="Connection error.", request=response)

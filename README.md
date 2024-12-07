@@ -31,7 +31,7 @@ uv run pytest
 ```python
 import abacatepay
 
-token = "<your api token>"
+token = "<your enviroment api token>"
 client = AbacatePay(token)
 
 billing = x = client.create_billing(products=[Product(externalId="123", name="Teste", quantity=1, price=101, description="Teste")], returnURL="https://abacatepay.com", completionUrl="https://abacatepay.com")
