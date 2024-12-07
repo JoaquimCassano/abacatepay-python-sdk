@@ -1,13 +1,15 @@
-from typing import List, Optional, Union, Literal
+from typing import List, Union
 from ._constants import BILLING_STATUS, BILLING_METHODS, BILLING_KINDS
 from pydantic import BaseModel
 
+
 class Product(BaseModel):
-  externalId: str
-  name: str
-  quantity: int
-  price: int
-  description: str
+    externalId: str
+    name: str
+    quantity: int
+    price: int
+    description: str
+
 
 class Customer(BaseModel):
     taxId: str
@@ -15,38 +17,45 @@ class Customer(BaseModel):
     email: str
     cellphone: str
 
-class ICostumer:
-    def __init__(self, data:dict):
+
+class CostumerResponse:
+    def __init__(self, data: dict):
         self.data = data
-        self.formatJson(data)
+        self._format_json(data)
 
-    def formatJson(self, data:dict):
-        self.id = data['id']
-        self.taxId: str = data['metadata']['taxId']
-        self.name: str = data['metadata']['name']
-        self.email: str = data['metadata']['email']
-        self.cellphone: str = data['metadata']['cellphone']
+    def _format_json(self, data: dict):
+        self.id = data.get("id")
+        self.taxId: str = data.get("metadata", {}).get("taxId")
+        self.name: str = data.get("metadata", {}).get("name")
+        self.email: str = data.get("metadata", {}).get("email")
+        self.cellphone: str = data.get("metadata", {}).get("cellphone")
 
-class IBilling:
-    def __init__(self, data:dict):
+
+class BillingResponse:
+    def __init__(self, data: dict):
         self.data = data
-        self.formatJson(data)
+        self._format_json(data)
 
-    def formatJson(self, data: dict):
-        billingData = data
+    def _format_json(self, data: dict):
+        billing_data = data
 
-        self.id: str = billingData['publicId']
-        self.url: str = billingData['url']
-        self.amount: int = billingData['amount']
-        self.status: BILLING_STATUS = billingData['status']
-        self.devMode: bool = billingData['devMode']
-        self.methods: List[BILLING_METHODS] = billingData['methods']
-        self.products: List[dict] = billingData['products']
-        self.frequency: BILLING_KINDS = billingData['frequency']
-        self.nextBilling: Union[str, None] = billingData.get('nextBilling')  # Optional field
-        self.customer: Union[ICostumer, None] = ICostumer(data=billingData.get('customer')) if 'customer' in billingData else None  # Optional field
-        self.accountId: str = billingData['customerId']['accountId'] if 'customerId' in billingData else None
-        self.storeId: str = billingData['customerId']['storeId'] if 'customerId' in billingData else None
-        self.createdAt: str = billingData['createdAt']
-        self.updatedAt: str = billingData['updatedAt']
-
+        self.id: str = billing_data["id"]
+        self.url: str = billing_data["url"]
+        self.amount: int = billing_data["amount"]
+        self.status: BILLING_STATUS = billing_data["status"]
+        self.dev_mode: bool = billing_data["devMode"]
+        self.methods: List[BILLING_METHODS] = billing_data["methods"]
+        self.products: List[dict] = billing_data["products"]
+        self.frequency: BILLING_KINDS = billing_data["frequency"]
+        self.next_billing: Union[str, None] = billing_data.get(
+            "nextBilling"
+        )  # Optional field
+        self.customer: Union[CostumerResponse, None] = (
+            CostumerResponse(data=billing_data.get("customer"))
+            if "customer" in billing_data
+            else None
+        )  # Optional field
+        self.account_id: str = billing_data.get("accountId")
+        self.store_id: str = billing_data.get("storeId")
+        self.created_at: str = billing_data.get("createdAt")
+        self.updated_at: str = billing_data.get("updatedAt")
