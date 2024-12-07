@@ -24,11 +24,11 @@ class CostumerResponse:
         self._format_json(data)
 
     def _format_json(self, data: dict):
-        self.id = data["id"]
-        self.taxId: str = data["metadata"]["taxId"]
-        self.name: str = data["metadata"]["name"]
-        self.email: str = data["metadata"]["email"]
-        self.cellphone: str = data["metadata"]["cellphone"]
+        self.id = data.get("id")
+        self.taxId: str = data.get("metadata", {}).get("taxId")
+        self.name: str = data.get("metadata", {}).get("name")
+        self.email: str = data.get("metadata", {}).get("email")
+        self.cellphone: str = data.get("metadata", {}).get("cellphone")
 
 
 class BillingResponse:
