@@ -1,5 +1,5 @@
 [project]
-name = "abacatepay-python-sdk"
+name = "abacatepay"
 version = "1.0.0"
 description = "Python SDK to interact with abacatepay's api"
 readme = "README.md"
