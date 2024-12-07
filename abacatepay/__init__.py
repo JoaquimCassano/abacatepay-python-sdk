@@ -30,13 +30,13 @@ class AbacatePay:
   """
 
   def __init__(self, api_key: str):
-    self.api_key = api_key
+    self.__api_key = api_key
 
   def request(self, url: str, method: Literal["GET", "POST", "PUT", "PATCH", "DELETE"] = "GET", **kwargs):
-    return requests.request(method, url,  headers={"Authorization": f"Bearer {self.api_key}", "User-Agent": USERAGENT}, **kwargs)
+    return requests.request(method, url,  headers={"Authorization": f"Bearer {self.__api_key}", "User-Agent": USERAGENT}, **kwargs)
 
   def CreateBilling(self, products:list[Product], returnURL:str, completionUrl:str, methods:list[BILLING_METHODS]=['PIX'], frequency:BILLING_KINDS='ONE_TIME', customerId:str|None=None, customer:Customer|None=None):
-    return Billing(products, returnURL, completionUrl, self.api_key, methods, frequency=frequency, customerId=customerId, customer=customer)
+    return Billing(products, returnURL, completionUrl, self.__api_key, methods, frequency=frequency, customerId=customerId, customer=customer)
 
   def listBills(self) -> list[IBilling]:
     response = self.request(f"{BASEURL}/billing/list", method="GET")
