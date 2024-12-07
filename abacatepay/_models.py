@@ -55,15 +55,7 @@ class BillingResponse:
             if "customer" in billing_data
             else None
         )  # Optional field
-        self.account_id: str = (
-            billing_data["customerId"]["accountId"]
-            if "customerId" in billing_data
-            else None
-        )
-        self.store_id: str = (
-            billing_data["customerId"]["storeId"]
-            if "customerId" in billing_data
-            else None
-        )
+        self.account_id: str = billing_data.get("accountId")
+        self.store_id: str = billing_data.get("storeId")
         self.created_at: str = billing_data.get("createdAt")
         self.updated_at: str = billing_data.get("updatedAt")
