@@ -1,7 +1,8 @@
 # AbacatePay
 SDK Python para interagir com a API da AbacatePay (https://abacatepay.com)
 
-
+![PyPI](https://img.shields.io/pypi/v/abacatepay?label=pypi%20package)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/abacatepay)
 ## Instalação
 
 ### Instalação via PyPI
