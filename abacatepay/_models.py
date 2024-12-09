@@ -12,23 +12,36 @@ class Product(BaseModel):
 
 
 class Customer(BaseModel):
-    taxId: str
-    name: str
+    """
+    Customer model
+
+    Attributes:
+        id: str | None
+        taxId: str | None
+        name: str | None
+        email: str
+        cellphone: str | None
+    Note: never pass `id` as an argument, it is supposed to be returned by the API!
+    """
+    id: str | None = None
+    taxId: str | None = None
+    name: str | None = None
     email: str
-    cellphone: str
+    cellphone: str | None = None
+
+    @classmethod
+    def from_dict(cls, data: dict):
+        metadata = data.get("metadata", {})
+        return cls(
+            id = data.get("id"),
+            taxId=metadata.get("taxId"),
+            name=metadata.get("name"),
+            email=metadata.get("email"),
+            cellphone=metadata.get("cellphone"),
+        )
 
 
-class CostumerResponse:
-    def __init__(self, data: dict):
-        self.data = data
-        self._format_json(data)
 
-    def _format_json(self, data: dict):
-        self.id = data.get("id")
-        self.taxId: str = data.get("metadata", {}).get("taxId")
-        self.name: str = data.get("metadata", {}).get("name")
-        self.email: str = data.get("metadata", {}).get("email")
-        self.cellphone: str = data.get("metadata", {}).get("cellphone")
 
 
 class BillingResponse:
@@ -50,8 +63,8 @@ class BillingResponse:
         self.next_billing: Union[str, None] = billing_data.get(
             "nextBilling"
         )  # Optional field
-        self.customer: Union[CostumerResponse, None] = (
-            CostumerResponse(data=billing_data.get("customer"))
+        self.customer: Union[Customer, None] = (
+            Customer.from_dict(data=billing_data.get("customer"))
             if "customer" in billing_data
             else None
         )  # Optional field
